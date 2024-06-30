@@ -1,14 +1,18 @@
 package az.atl.project.eTaskify.dto;
 
-import az.atl.project.eTaskify.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
+@Builder
 public class UserResponse {
+    private String name;
 
-    private List<UserResponseList> responses;
+    private String phoneNumber;
+
+    private String address;
+
+    private String username;
 }

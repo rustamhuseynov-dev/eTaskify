@@ -1,9 +1,6 @@
 package az.atl.project.eTaskify.service.serviceImpl;
 
-import az.atl.project.eTaskify.dto.UserDto;
-import az.atl.project.eTaskify.dto.UserLoginRequest;
-import az.atl.project.eTaskify.dto.UserResponse;
-import az.atl.project.eTaskify.dto.UserResponseList;
+import az.atl.project.eTaskify.dto.*;
 import az.atl.project.eTaskify.entity.Authority;
 import az.atl.project.eTaskify.entity.SignupRequest;
 import az.atl.project.eTaskify.entity.User;
@@ -39,11 +36,11 @@ public class UserServiceImpl implements UserService {
     private final SignupRequestRepository signupRequestRepository;
 
     @Override
-    public UserDto signUp(UserDto userDto, BindingResult br) {
+    public UserResponse signUp(UserRequest userRequest, BindingResult br) {
         if (br.hasErrors()){
             throw new OurException(br,null);
         }
-        User user = userRepository.findByUsername(userDto.getUsername())
+        User user = userRepository.findByUsername(userRequest.getUsername())
                         .orElseThrow(() -> new OurException(null,"user tapilmadi"));
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -51,10 +48,10 @@ public class UserServiceImpl implements UserService {
         String userName = userCheck.get().getUsername();
 
         if (user.getUsername().equals(userName)) {
-            modelMapper.map(userDto, user);
+            modelMapper.map(userRequest, user);
             user.setEnabled(true);
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String pass = userDto.getPassword();
+            String pass = userRequest.getPassword();
             String raw = passwordEncoder.encode(pass);
             user.setPassword(raw);
             userRepository.save(user);
@@ -64,17 +61,16 @@ public class UserServiceImpl implements UserService {
         }
         //response
 
-        return UserDto.builder()
-                .name(user.getName())
-                .email(user.getEmail())
+        return UserResponse.builder()
+                .name(user.getUsername())
+                .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
                 .username(user.getUsername())
-                .role(userDto.getRole())
                 .build();
     }
 
     @Override
-    public UserResponse findAllUser() {
+    public UserAllResponse findAllUser() {
         List<User> list = userRepository.findAll();
         // response
         List<UserResponseList> responseList = new ArrayList<>();
@@ -85,7 +81,7 @@ public class UserServiceImpl implements UserService {
             responseList.add(userResponseList);
         }
 
-        UserResponse response = new UserResponse();
+        UserAllResponse response = new UserAllResponse();
         response.setResponses(responseList);
         return response;
     }
@@ -98,18 +94,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String requestToBecomeUser(UserDto userDto) {
-        if (userDto.getUsername() != null){
+    public String requestToBecomeUser(UserRequest userRequest) {
+        if (userRequest.getUsername() != null){
             User user = new User();
-            user.setUsername(userDto.getUsername());
+            user.setUsername(userRequest.getUsername());
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-            String pass = userDto.getPassword();
+            String pass = userRequest.getPassword();
             String raw = passwordEncoder.encode(pass);
             user.setPassword(raw);
             user.setEnabled(true);
             userRepository.save(user);
             SignupRequest request = new SignupRequest();
-            request.setUsername(userDto.getUsername());
+            request.setUsername(userRequest.getUsername());
             request.setMessageToAdmin("Qeydiyattan kecmek isteyirem");
             signupRequestRepository.save(request);
             return "telebiniz admine catdirildi";
@@ -118,14 +114,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String giveRole(UserDto userDto) {
-        User user = userRepository.findByUsername(userDto.getUsername())
+    public String giveRole(GiveRoleRequest giveRoleRequest) {
+        User user = userRepository.findByUsername(giveRoleRequest.getUsername())
                 .orElseThrow(() -> new OurException(null,"bele bir username tapilmadi"));
         Authority authority = new Authority();
-        authority.setUsername(userDto.getUsername());
-        authority.setAuthority(userDto.getRole());
+        authority.setUsername(giveRoleRequest.getUsername());
+        authority.setAuthority(giveRoleRequest.getRole());
         authorityRepository.save(authority);
         return "qeydiyattdan kece bilersiz";
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
 

@@ -1,19 +1,22 @@
 package az.atl.project.eTaskify.service;
 
-import az.atl.project.eTaskify.dto.UserDto;
-import az.atl.project.eTaskify.dto.UserLoginRequest;
-import az.atl.project.eTaskify.dto.UserResponse;
+import az.atl.project.eTaskify.dto.*;
+import az.atl.project.eTaskify.entity.User;
 import org.springframework.validation.BindingResult;
+
+import java.util.Optional;
 
 public interface UserService {
 
-    UserDto signUp(UserDto userDto, BindingResult br);
+    UserResponse signUp(UserRequest userRequest, BindingResult br);
 
-    UserResponse findAllUser();
+    UserAllResponse findAllUser();
 
     String login(UserLoginRequest userLoginRequest);
 
-    String requestToBecomeUser(UserDto userDto);
+    String requestToBecomeUser(UserRequest userRequest);
 
-    String giveRole(UserDto userDto);
+    String giveRole(GiveRoleRequest giveRoleRequest);
+
+    Optional<User> findByUsername(String username);
 }

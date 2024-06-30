@@ -17,8 +17,8 @@ public class UserRestController {
     private final UserService userService;
 
     @PostMapping(path = "/req")
-    public ResponseEntity<String> requestToBecomeUser(@RequestBody UserRequest userRequest){
-        return new ResponseEntity<>(userService.requestToBecomeUser(userRequest),HttpStatus.OK);
+    public ResponseEntity<String> requestToBecomeUser(@Valid @RequestBody UserRequest userRequest,BindingResult br){
+        return new ResponseEntity<>(userService.requestToBecomeUser(userRequest,br),HttpStatus.OK);
     }
 
     @PostMapping(path = "/signup")
@@ -32,8 +32,8 @@ public class UserRestController {
     }
 
     @PostMapping(path = "give-role")
-    public ResponseEntity<String> giveRole(@RequestBody GiveRoleRequest giveRoleRequest){
-        return new ResponseEntity<>(userService.giveRole(giveRoleRequest),HttpStatus.OK);
+    public ResponseEntity<String> giveRole(@Valid @RequestBody GiveRoleRequest giveRoleRequest,BindingResult br){
+        return new ResponseEntity<>(userService.giveRole(giveRoleRequest,br),HttpStatus.OK);
     }
 
     @GetMapping(path = "/get-all-user")

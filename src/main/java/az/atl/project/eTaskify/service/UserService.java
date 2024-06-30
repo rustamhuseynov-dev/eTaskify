@@ -14,9 +14,9 @@ public interface UserService {
 
     String login(UserLoginRequest userLoginRequest);
 
-    String requestToBecomeUser(UserRequest userRequest);
+    String requestToBecomeUser(UserRequest userRequest, BindingResult br);
 
-    String giveRole(GiveRoleRequest giveRoleRequest);
+    String giveRole(GiveRoleRequest giveRoleRequest, BindingResult br);
 
     Optional<User> findByUsername(String username);
 }

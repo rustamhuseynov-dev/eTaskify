@@ -94,7 +94,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String requestToBecomeUser(UserRequest userRequest) {
+    public String requestToBecomeUser(UserRequest userRequest, BindingResult br) {
+        if (br.hasErrors()){
+            throw new OurException(br,null);
+        }
         if (userRequest.getUsername() != null){
             User user = new User();
             user.setUsername(userRequest.getUsername());
@@ -114,7 +117,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String giveRole(GiveRoleRequest giveRoleRequest) {
+    public String giveRole(GiveRoleRequest giveRoleRequest, BindingResult br) {
+        if (br.hasErrors()){
+            throw new OurException(br,null);
+        }
         User user = userRepository.findByUsername(giveRoleRequest.getUsername())
                 .orElseThrow(() -> new OurException(null,"bele bir username tapilmadi"));
         Authority authority = new Authority();

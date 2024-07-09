@@ -1,15 +1,11 @@
 package az.atl.project.eTaskify.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "authorities")
-@Getter
-@Setter
-@ToString
+@Data
 public class Authority {
 
     @Id

@@ -50,6 +50,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/user/signup").hasAuthority("ROLE_USER")
                                 .requestMatchers(HttpMethod.GET, "/user/get-all-user").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST,"/user/give-role").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE,"/user/{id}").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST, "/user/req").permitAll()
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated()

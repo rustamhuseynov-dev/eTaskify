@@ -27,8 +27,13 @@ public class UserRestController {
     }
 
     @GetMapping(path = "/login")
-    public String login(@RequestBody UserLoginRequest userLoginRequest){
-        return userService.login(userLoginRequest);
+    public String login(){
+        return "Hesabiniza daxil oldunuz.";
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<UserResponse> findById(@PathVariable Long id){
+        return new ResponseEntity<>(userService.findById(id),HttpStatus.OK);
     }
 
     @PostMapping(path = "give-role")
@@ -39,6 +44,16 @@ public class UserRestController {
     @GetMapping(path = "/get-all-user")
     public ResponseEntity<UserAllResponse> findAllUser(){
         return new ResponseEntity<>(userService.findAllUser(),HttpStatus.OK);
+    }
+
+    @PutMapping
+    public ResponseEntity<UserResponse> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest, BindingResult br){
+        return new ResponseEntity<>(userService.updateUser(userUpdateRequest,br),HttpStatus.OK);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<UserDeleteResponse> deleteUser(@PathVariable Long id){
+        return new ResponseEntity<>(userService.deleteUser(id),HttpStatus.OK);
     }
 
 }

@@ -12,11 +12,15 @@ public interface UserService {
 
     UserAllResponse findAllUser();
 
-    String login(UserLoginRequest userLoginRequest);
-
     String requestToBecomeUser(UserRequest userRequest, BindingResult br);
 
     String giveRole(GiveRoleRequest giveRoleRequest, BindingResult br);
 
     Optional<User> findByUsername(String username);
+
+    UserResponse findById(Long id);
+
+    UserResponse updateUser(UserUpdateRequest userUpdateRequest, BindingResult br);
+
+    UserDeleteResponse deleteUser(Long id);
 }
